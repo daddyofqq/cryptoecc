@@ -318,40 +318,6 @@ void test_inverse()
     mbedtls_mpi_init(&M);
 }
 
-void test_naf()
-{
-    limb_t x = 1122334455;
-    static int NAF2[] = {1, 0, 0, 0, 1, 0, -1, 0, 0, -1, 0, 1, 0, -1, 0, -1, 0, 0, 0, -1, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, -1};
-
-    mpi<bits_per_limb> m(x);
-    NAF naf2(m);
-    auto it1 = naf2.get_iterator();
-
-    unsigned i = 0;
-    while (!it1.end()) {
-        int v = it1;
-        if (v != NAF2[i])
-            break;
-        it1.next();
-        i++;
-    }
-    test_assert(std::string("NAF2"), i == sizeof(NAF2) / sizeof(int));
-
-    NAF<bits_per_limb, 6> naf6(m);
-    auto it2 = naf6.get_iterator();
-
-    static int NAF6[] = {1, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, -9, 0, 0, 0, 0, 0, 0, 0, -9};
-    i = 0;
-    while (!it2.end()) {
-        int v = it2;
-        if (v != NAF6[i])
-            break;
-        it2.next();
-        i++;
-    }
-    test_assert(std::string("NAF6"), i == sizeof(NAF6) / sizeof(int));
-}
-
 void test_mod_exp()
 {
     constexpr unsigned N = 128;
@@ -1194,8 +1160,6 @@ int main(int argc, char* argv[])
     test_mod_exp();
 
     test_inverse();
-
-    test_naf();
 
     test_ecc_basic();
 
